@@ -59,14 +59,15 @@ class ExperimentManager:
             
             for step in range(config.max_steps):
                 action = agent.get_action(state)
-                # Convertir la acción escalar a array numpy de forma (1,)
                 action_array = np.array([action])
                 next_state, reward, terminated, truncated, _ = env.step(action_array)
                 done = terminated or truncated
                 
-                agent.learn(state, action, reward, next_state, done)
+                modified_reward = self._compute_physics_based_reward(state, next_state, action, reward)
                 
-                total_reward += reward
+                agent.learn(state, action, modified_reward, next_state, done)
+                
+                total_reward += modified_reward
                 steps += 1
                 energy += action**2  # Energía consumida
                 state = next_state
@@ -143,8 +144,56 @@ class ExperimentManager:
         self._plot_qtable_heatmap(axes[2,1], agent.q_table)
         
         plt.tight_layout()
-        plt.savefig(f'experiment_results_{description}_{self.timestamp}.png')
+        plt.savefig(f'Mountain Car Continuous/Resultados/experiment_results_{description}_{self.timestamp}.png')
         plt.close()
+        
+    def _compute_physics_based_reward(self, 
+                                    state: np.ndarray, 
+                                    next_state: np.ndarray, 
+                                    action: float, 
+                                    base_reward: float) -> float:
+        """
+        Calcula una recompensa modificada basada en principios físicos del sistema.
+        
+        Args:
+            state: Estado actual [posición, velocidad]
+            next_state: Estado siguiente [posición, velocidad]
+            action: Acción tomada
+            base_reward: Recompensa base del ambiente
+            
+        Returns:
+            float: Recompensa modificada
+        """
+        position, velocity = state
+        next_position, next_velocity = next_state
+        
+        # 1. Recompensa por ganancia de energía potencial
+        height_delta = next_position - position
+        potential_energy_reward = height_delta * 15.0  # Factor de escala
+        
+        # 2. Recompensa por manejo eficiente de energía cinética
+        velocity_reward = 0.0
+        if position < -0.5:  # Zona de impulso inicial
+            # Recompensar la acumulación de velocidad
+            velocity_reward = abs(next_velocity) * 8.0
+        elif -0.5 <= position < 0:  # Zona de acumulación de momento
+            # Recompensar el movimiento oscilatorio
+            velocity_reward = velocity * next_velocity * 12.0 if velocity * next_velocity < 0 else 0
+        else:  # Zona de ascenso
+            # Recompensar velocidad positiva
+            velocity_reward = next_velocity * 10.0 if next_velocity > 0 else 0
+            
+        # 3. Penalización por uso excesivo de energía
+        energy_penalty = -0.1 * (action**2)
+        
+        # 4. Bonus por alcanzar hitos
+        milestone_bonus = 0.0
+        if next_position >= 0.45:  # Meta alcanzada
+            milestone_bonus = 100.0
+        elif next_position >= 0.3 and velocity > 0:  # Progreso significativo
+            milestone_bonus = 20.0
+            
+        return base_reward + potential_energy_reward + velocity_reward + energy_penalty + milestone_bonus 
         
     def _plot_metric(self, ax, data, xlabel, ylabel, title, window):
         """Utilidad para graficar una métrica con su media móvil"""
@@ -167,5 +216,5 @@ class ExperimentManager:
         
     def save_results(self):
         """Guarda los resultados de todos los experimentos"""
-        with open(f'experiment_results_{self.timestamp}.pkl', 'wb') as f:
+        with open(f'Mountain Car Continuous/Resultados/experiment_results_{self.timestamp}.pkl', 'wb') as f:
             pickle.dump(self.results, f)
