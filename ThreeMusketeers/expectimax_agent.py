@@ -12,8 +12,15 @@ class ExpectimaxAgent(Agent):
         return action
 
     def expectimax(self, board: Board, depth, maximizing_player):
-        if depth == 0 or board.is_end(self.player)[0]:
-            return self.heuristic_utility(board), None
+        # Chequear fin del juego
+        is_end, winner = board.is_end(self.player)
+        if is_end:
+            # Pérdida si el oponente gana
+            return (-1e6 if winner != self.player else 1e6), None
+
+        # Profundidad base
+        if depth == 0:
+            return self.heuristic_utility(board, depth), None
 
         if maximizing_player:
             max_value = float('-inf')
@@ -37,6 +44,5 @@ class ExpectimaxAgent(Agent):
                 expected_value += value / len(possible_actions)
             return expected_value, None
 
-    def heuristic_utility(self, board: Board):
-        # Llama a la heurística definida en la inicialización
-        return self.heuristic(board, self.player)
+    def heuristic_utility(self, board: Board, depth: int):
+        return self.heuristic(board, self.player, depth)

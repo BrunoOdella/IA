@@ -12,9 +12,17 @@ class MinimaxAgent(Agent):
         return action
 
     def minimax(self, board: Board, depth, alpha, beta, maximizing_player):
-        if depth == 0 or board.is_end(self.player)[0]:
-            return self.heuristic_utility(board), None
+        # Chequear fin del juego
+        is_end, winner = board.is_end(self.player)
+        if is_end:
+            # Pérdida si el oponente gana
+            return (-1e6 if winner != self.player else 1e6), None
 
+        # Profundidad base
+        if depth == 0:
+            return self.heuristic_utility(board, depth), None
+
+        # Maximizar o minimizar según el jugador
         if maximizing_player:
             max_value = float('-inf')
             best_action = None
@@ -43,6 +51,5 @@ class MinimaxAgent(Agent):
                     break
             return min_value, None
 
-    def heuristic_utility(self, board: Board):
-        # Llama a la heurística definida en la inicialización
-        return self.heuristic(board, self.player)
+    def heuristic_utility(self, board: Board, depth: int):
+        return self.heuristic(board, self.player, depth)
