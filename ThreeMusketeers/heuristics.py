@@ -2,7 +2,7 @@ from board import Board
 
 class Heuristics:
     @staticmethod
-    def manhattan_heuristic(board: Board, player: int, **kwargs) -> float:
+    def manhattan_heuristic(board: Board, player: int) -> float:
         musketeer_positions = board.find_musketeer_positions()
         trap_position = board.find_trap_position()
 
@@ -21,7 +21,7 @@ class Heuristics:
         return -proximity_penalty - trap_penalty
 
     @staticmethod
-    def alignment_heuristic(board: Board, player: int, **kwargs) -> float:
+    def alignment_heuristic(board: Board, player: int) -> float:
         musketeer_positions = board.find_musketeer_positions()
 
         alignment_penalty = 0
@@ -34,13 +34,13 @@ class Heuristics:
         return -alignment_penalty
 
     @staticmethod
-    def movement_heuristic(board: Board, player: int, **kwargs) -> float:
+    def movement_heuristic(board: Board, player: int) -> float:
         musketeer_moves = len(board.get_musketeer_valid_movements())
         enemy_moves = len(board.get_enemy_valid_movements())
         return musketeer_moves - enemy_moves
 
     @staticmethod
-    def center_proximity_heuristic(board: Board, player: int, **kwargs) -> float:
+    def center_proximity_heuristic(board: Board, player: int) -> float:
         musketeer_positions = board.find_musketeer_positions()
         center = (board.board_size[0] // 2, board.board_size[1] // 2)
 
@@ -52,7 +52,7 @@ class Heuristics:
         return -center_proximity
 
     @staticmethod
-    def zone_control_heuristic(board: Board, player: int, **kwargs) -> float:
+    def zone_control_heuristic(board: Board, player: int) -> float:
         musketeer_positions = board.find_musketeer_positions()
         enemy_positions = board.find_enemy_positions()
 
@@ -61,12 +61,8 @@ class Heuristics:
 
         return musketeer_control - enemy_control
 
-
-
-
-
     @staticmethod
-    def enhanced_zone_control_heuristic(board: Board, player: int, **kwargs) -> float:
+    def enhanced_zone_control_heuristic(board: Board, player: int) -> float:
         # Parte 1: Control del tablero
         musketeer_positions = board.find_musketeer_positions()
         enemy_positions = board.find_enemy_positions()
@@ -101,13 +97,8 @@ class Heuristics:
         # Resultado final ponderado
         return control_score - trap_penalty - alignment_penalty + movement_bonus
 
-
-
-
-
-
     @staticmethod
-    def enhanced_zone_control_with_strong_trap_penalty(board: Board, player: int, depth: int, **kwargs) -> float:
+    def enhanced_zone_control_with_strong_trap_penalty(board: Board, player: int) -> float:
         # Parte 1: Control del tablero
         musketeer_positions = board.find_musketeer_positions()
         enemy_positions = board.find_enemy_positions()

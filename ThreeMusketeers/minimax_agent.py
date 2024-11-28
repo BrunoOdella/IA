@@ -15,12 +15,11 @@ class MinimaxAgent(Agent):
         # Chequear fin del juego
         is_end, winner = board.is_end(self.player)
         if is_end:
-            # Pérdida si el oponente gana
             return (-1e6 if winner != self.player else 1e6), None
 
         # Profundidad base
         if depth == 0:
-            return self.heuristic_utility(board, depth), None
+            return self.heuristic_utility(board), None
 
         # Maximizar o minimizar según el jugador
         if maximizing_player:
@@ -51,5 +50,5 @@ class MinimaxAgent(Agent):
                     break
             return min_value, None
 
-    def heuristic_utility(self, board: Board, depth: int):
-        return self.heuristic(board, self.player, depth)
+    def heuristic_utility(self, board: Board):
+        return self.heuristic(board, self.player)

@@ -7,7 +7,7 @@ from play import plot_individual_duel_results, play_multiple_games
 
 
 def run_experiments():
-    env = ThreeMusketeersEnv(grid_size=7)
+    env = ThreeMusketeersEnv(grid_size=5)
 
     # Cambiar este código por {Heuristics.alignment_heuristic, Heuristics.movement_heuristic, etc.} para probar otra heuristica
     minimax_heuristic = Heuristics.enhanced_zone_control_with_strong_trap_penalty
