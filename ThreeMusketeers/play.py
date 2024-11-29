@@ -38,15 +38,22 @@ def play_multiple_games(env, agent1, agent2, num_games=100, render=False):
     player1_wins = 0
     player2_wins = 0
 
-    for _ in tqdm(range(num_games)):
-        winner = play_vs_other_agent(env, agent1, agent2, render)
-        if winner == 1:
-            player1_wins += 1
-        else:
-            player2_wins += 1
+    with tqdm(total=num_games, desc="Playing games") as pbar:
+        for _ in range(num_games):
+            winner = play_vs_other_agent(env, agent1, agent2, render)
+            if winner == 1:
+                player1_wins += 1
+            else:
+                player2_wins += 1
+
+            # Actualizar la barra de progreso con victorias y derrotas
+            pbar.set_postfix({
+                "Player 1 Wins": player1_wins,
+                "Player 2 Wins": player2_wins
+            })
+            pbar.update(1)
 
     return player1_wins, player2_wins
-
 
 def plot_results(results):
     """

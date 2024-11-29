@@ -62,43 +62,7 @@ class Heuristics:
         return musketeer_control - enemy_control
 
     @staticmethod
-    def enhanced_zone_control_heuristic(board: Board, player: int) -> float:
-        # Parte 1: Control del tablero
-        musketeer_positions = board.find_musketeer_positions()
-        enemy_positions = board.find_enemy_positions()
-        trap_position = board.find_trap_position()
-
-        musketeer_control = len(musketeer_positions)
-        enemy_control = len(enemy_positions)
-
-        control_score = musketeer_control - enemy_control  # La base de zone control
-
-        # Parte 2: Penalización por proximidad a la trampa
-        trap_penalty = 0
-        if trap_position:
-            trap_penalty = sum(
-                10 / (abs(pos[0] - trap_position[0]) + abs(pos[1] - trap_position[1]) + 1)
-                for pos in musketeer_positions
-            )
-
-        # Parte 3: Penalización por alineaciones
-        alignment_penalty = 0
-        for i, pos1 in enumerate(musketeer_positions):
-            for j, pos2 in enumerate(musketeer_positions):
-                if i < j:
-                    if pos1[0] == pos2[0]:  # Misma fila
-                        alignment_penalty += 20
-                    if pos1[1] == pos2[1]:  # Misma columna
-                        alignment_penalty += 20
-
-        # Parte 4: Incentivo por movimientos disponibles
-        movement_bonus = len(board.get_musketeer_valid_movements())
-
-        # Resultado final ponderado
-        return control_score - trap_penalty - alignment_penalty + movement_bonus
-
-    @staticmethod
-    def enhanced_zone_control_with_strong_trap_penalty(board: Board, player: int) -> float:
+    def enhanced_zone_control_with_dynamic_movement_evaluation(board: Board, player: int) -> float:
         # Parte 1: Control del tablero
         musketeer_positions = board.find_musketeer_positions()
         enemy_positions = board.find_enemy_positions()
@@ -111,16 +75,25 @@ class Heuristics:
 
         # Parte 2: Penalización fuerte por trampas
         trap_penalty = 0
+        safe_bonus = 0
         if trap_position:
             for pos in musketeer_positions:
                 distance_to_trap = abs(pos[0] - trap_position[0]) + abs(pos[1] - trap_position[1])
-                
-                # Penalización extrema si un mosquetero está en la trampa
+
                 if distance_to_trap == 0:
-                    return -1e6  # Pérdida inmediata
-                
-                # Penalización progresiva para la cercanía
-                trap_penalty += 50 / distance_to_trap
+                    return -1e6  # Pérdida inmediata por estar en la trampa
+
+                # Penalización progresiva por cercanía
+                trap_penalty += 100 / (distance_to_trap ** 2 + 1)
+
+                # Incentivo por mantenerse alejado
+                safe_bonus += 10 * distance_to_trap
+
+            # Penalizar movimientos hacia la trampa
+            for move in board.get_musketeer_valid_movements():
+                _, _, x, y = move
+                if (x, y) == trap_position:
+                    trap_penalty += 1e4
 
         # Parte 3: Penalización por alineaciones
         alignment_penalty = 0
@@ -128,12 +101,14 @@ class Heuristics:
             for j, pos2 in enumerate(musketeer_positions):
                 if i < j:
                     if pos1[0] == pos2[0]:  # Misma fila
-                        alignment_penalty += 20
+                        alignment_penalty += 50
                     if pos1[1] == pos2[1]:  # Misma columna
-                        alignment_penalty += 20
+                        alignment_penalty += 50
 
-        # Parte 4: Incentivo por movimientos disponibles
-        movement_bonus = len(board.get_musketeer_valid_movements())
+        # Parte 4: Evaluación dinámica de movimientos
+        musketeer_moves = len(board.get_musketeer_valid_movements())
+        enemy_moves = len(board.get_enemy_valid_movements())
+        movement_score = musketeer_moves - enemy_moves  # Diferencia de movimientos
 
         # Resultado final ponderado
-        return control_score - trap_penalty - alignment_penalty + movement_bonus
+        return control_score - trap_penalty - alignment_penalty + movement_score + safe_bonus

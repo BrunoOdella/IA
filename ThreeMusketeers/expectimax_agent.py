@@ -8,7 +8,7 @@ class ExpectimaxAgent(Agent):
         self.heuristic = heuristic
 
     def next_action(self, board: Board):
-        _, action = self.expectimax(board, depth=3, maximizing_player=True)
+        _, action = self.expectimax(board, depth=self.depth, maximizing_player=True)
         return action
 
     def expectimax(self, board: Board, depth, maximizing_player):

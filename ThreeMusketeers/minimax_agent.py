@@ -7,8 +7,9 @@ class MinimaxAgent(Agent):
         super().__init__(player)
         self.heuristic = heuristic
 
+
     def next_action(self, board: Board):
-        _, action = self.minimax(board, depth=3, alpha=float('-inf'), beta=float('inf'), maximizing_player=True)
+        _, action = self.minimax(board, depth=self.depth, alpha=float('-inf'), beta=float('inf'), maximizing_player=True)
         return action
 
     def minimax(self, board: Board, depth, alpha, beta, maximizing_player):

@@ -10,15 +10,15 @@ def run_experiments():
     env = ThreeMusketeersEnv(grid_size=5)
 
     # Cambiar este código por {Heuristics.alignment_heuristic, Heuristics.movement_heuristic, etc.} para probar otra heuristica
-    minimax_heuristic = Heuristics.enhanced_zone_control_with_strong_trap_penalty
-    expectimax_heuristic = Heuristics.enhanced_zone_control_with_strong_trap_penalty
+    minimax_heuristic = Heuristics.movement_heuristic
+    expectimax_heuristic = Heuristics.movement_heuristic
 
     # Crear agentes con las heurísticas seleccionadas
     minimax_agent = MinimaxAgent(player=1, heuristic=minimax_heuristic)
     expectimax_agent = ExpectimaxAgent(player=1, heuristic=expectimax_heuristic)
-    captain_pete = CaptainPete(player=2)
+    captain_pete = CaptainPete(player= 2)
 
-    for depth in [5]:  # Ajustar profundidades mayores
+    for depth in [3]:  # Ajustar profundidades mayores
         minimax_agent.depth = depth
         expectimax_agent.depth = depth
 
@@ -26,7 +26,7 @@ def run_experiments():
 
         # Minimax vs Captain Pete
         print("Minimax vs Captain Pete...")
-        player1_wins_minimax, player2_wins_minimax = play_multiple_games(env, minimax_agent, captain_pete, num_games=1000)
+        player1_wins_minimax, player2_wins_minimax = play_multiple_games(env, minimax_agent, captain_pete, num_games=100)
         plot_individual_duel_results({
             "Model": ["Minimax", "Captain Pete"],
             "Wins": [player1_wins_minimax, player2_wins_minimax]
@@ -34,7 +34,7 @@ def run_experiments():
 
         # Expectimax vs Captain Pete
         print("Expectimax vs Captain Pete...")
-        player1_wins_expectimax, player2_wins_expectimax = play_multiple_games(env, expectimax_agent, captain_pete, num_games=1000)
+        player1_wins_expectimax, player2_wins_expectimax = play_multiple_games(env, expectimax_agent, captain_pete, num_games=100)
         plot_individual_duel_results({
             "Model": ["Expectimax", "Captain Pete"],
             "Wins": [player1_wins_expectimax, player2_wins_expectimax]
