@@ -45,24 +45,24 @@ def main():
         #     description="optimized",
         # ),
         ExperimentConfig(
-            learning_rate=0.03,  # Disminuir tasa de aprendizaje
-            discount_factor=0.98,  # Mantener el factor alto
+            learning_rate=0.03,
+            discount_factor=0.98,
             epsilon=1.0,
             epsilon_decay=0.996,
             epsilon_min=0.01,
-            n_episodes=600,  # Aumentar el número de episodios para más exploración
+            n_episodes=600,
             max_steps=999,
-            description="slower_learning_high_discount",
+            description="slower_learning_high_discount", # keep - todas las metricas estan estables
         ),
         ExperimentConfig(
             learning_rate=0.05,
             discount_factor=0.99,
             epsilon=1.0,
-            epsilon_decay=0.999,  # Exploración más prolongada
+            epsilon_decay=0.999,
             epsilon_min=0.01,
             n_episodes=500,
             max_steps=999,
-            description="extended_exploration",
+            description="extended_exploration", # keep - el periodo estable es muy corto para tener conclusiones
         ),
         ExperimentConfig(
             learning_rate=0.05,
@@ -70,19 +70,19 @@ def main():
             epsilon=1.0,
             epsilon_decay=0.997,
             epsilon_min=0.01,
-            n_episodes=1000,  # Más episodios
+            n_episodes=1000,
             max_steps=999,
-            description="longer_training",
+            description="longer_training", # out - las metricas estan estables pero no es la mejor
         ),
         ExperimentConfig(
             learning_rate=0.05,
             discount_factor=0.99,
             epsilon=1.0,
             epsilon_decay=0.997,
-            epsilon_min=0.05,  # Más exploración en la fase final
+            epsilon_min=0.05,
             n_episodes=500,
             max_steps=999,
-            description="higher_min_epsilon",
+            description="higher_min_epsilon", # out - las metricas llegaron a un minimo y luego subieron
         ),
         ExperimentConfig(
             learning_rate=0.05,
@@ -91,8 +91,8 @@ def main():
             epsilon_decay=0.997,
             epsilon_min=0.01,
             n_episodes=800,
-            max_steps=500,  # Menos pasos pero más episodios
-            description="more_episodes_fewer_steps",
+            max_steps=500,
+            description="more_episodes_fewer_steps", # keep - mas episodios | las metricas tienden a mejorar con mas episodios | experiment_results_more_episodes_fewer_steps_20241128_210130.png
         ),
         ExperimentConfig(
             learning_rate=0.05,
