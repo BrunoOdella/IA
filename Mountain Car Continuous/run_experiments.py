@@ -62,7 +62,7 @@ def main():
             epsilon_min=0.01,
             n_episodes=500,
             max_steps=999,
-            description="extended_exploration", # keep - el periodo estable es muy corto para tener conclusiones
+            description="extended_exploration", # keep - el periodo estable es muy corto para tener conclusiones, agregar episodios
         ),
         ExperimentConfig(
             learning_rate=0.05,
@@ -102,7 +102,7 @@ def main():
             epsilon_min=0.01,
             n_episodes=500,
             max_steps=999,
-            description="adaptive_learning_rate",
+            description="adaptive_learning_rate", # keep - con mas episodios pareceria mejorarm, tiene un comportamiento de amortiguamiento o oscilacion amortiguada
         ),
     ]
 
