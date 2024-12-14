@@ -1,0 +1,3 @@
+Agent,Depth,Heuristic,Wins,Losses
+Minimax,3,Penalty Heuristic Refined,880,120
+Expectimax,3,Penalty Heuristic Refined,955,45
