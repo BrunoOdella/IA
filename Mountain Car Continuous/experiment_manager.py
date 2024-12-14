@@ -8,6 +8,7 @@ from dataclasses import dataclass
 import pickle
 import gymnasium as gym
 from qlearning_agent import QLearningAgent
+from stochastic_qlearning_agent import StochasticQLearningAgent
 from discretization import MountainCarDiscretizer
 
 @dataclass
@@ -20,6 +21,7 @@ class ExperimentConfig:
     epsilon_min: float
     n_episodes: int
     max_steps: int
+    batch_size: int
     description: str
 
 class ExperimentManager:
@@ -33,13 +35,24 @@ class ExperimentManager:
     def run_experiment(self, config: ExperimentConfig) -> Dict:
         """Ejecuta un experimento con la configuración dada"""
         env = gym.make("MountainCarContinuous-v0")
-        agent = QLearningAgent(
+        # agent = QLearningAgent(
+        #     discretizer=self.discretizer,
+        #     learning_rate=config.learning_rate,
+        #     discount_factor=config.discount_factor,
+        #     epsilon=config.epsilon,
+        #     epsilon_decay=config.epsilon_decay,
+        #     epsilon_min=config.epsilon_min
+        # )
+        
+        agent = StochasticQLearningAgent(
             discretizer=self.discretizer,
             learning_rate=config.learning_rate,
             discount_factor=config.discount_factor,
             epsilon=config.epsilon,
             epsilon_decay=config.epsilon_decay,
-            epsilon_min=config.epsilon_min
+            epsilon_min=config.epsilon_min,
+            batch_size=config.batch_size,
+            sample_size=None  
         )
         
         metrics = {

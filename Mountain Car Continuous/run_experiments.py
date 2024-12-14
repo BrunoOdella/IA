@@ -12,6 +12,7 @@ def main():
         #     epsilon_min=0.01,
         #     n_episodes=500,
         #     max_steps=999,
+        #     batch_size=32,  # Batch estándar para configuración baseline
         #     description="baseline",
         # ),
         # ExperimentConfig(
@@ -22,6 +23,7 @@ def main():
         #     epsilon_min=0.01,
         #     n_episodes=500,
         #     max_steps=999,
+        #     batch_size=64,  # Batch grande para aprendizaje conservador
         #     description="conservative_learning",
         # ),
         # ExperimentConfig(
@@ -32,6 +34,7 @@ def main():
         #     epsilon_min=0.05,
         #     n_episodes=500,
         #     max_steps=999,
+        #     batch_size=16,  # Batch pequeño para aprendizaje agresivo
         #     description="aggressive_learning",
         # ),
         # ExperimentConfig(
@@ -42,6 +45,7 @@ def main():
         #     epsilon_min=0.05,
         #     n_episodes=1000,
         #     max_steps=500,
+        #     batch_size=48,  # Batch intermedio para configuración optimizada
         #     description="optimized",
         # ),
         ExperimentConfig(
@@ -50,9 +54,10 @@ def main():
             epsilon=1.0,
             epsilon_decay=0.996,
             epsilon_min=0.01,
-            n_episodes=600,
+            n_episodes=800,
             max_steps=999,
-            description="slower_learning_high_discount", # keep - todas las metricas estan estables
+            batch_size=64,  # Batch grande para aprendizaje estable
+            description="slower_learning_high_discount | stochastic",
         ),
         ExperimentConfig(
             learning_rate=0.05,
@@ -60,10 +65,33 @@ def main():
             epsilon=1.0,
             epsilon_decay=0.999,
             epsilon_min=0.01,
-            n_episodes=500,
+            n_episodes=800,
             max_steps=999,
-            description="extended_exploration", # keep - el periodo estable es muy corto para tener conclusiones, agregar episodios
+            batch_size=32,  # Batch mediano para exploración extendida
+            description="extended_exploration | stochastic",
         ),
+        # ExperimentConfig(
+        #     learning_rate=0.05,
+        #     discount_factor=0.99,
+        #     epsilon=1.0,
+        #     epsilon_decay=0.997,
+        #     epsilon_min=0.01,
+        #     n_episodes=1000,
+        #     max_steps=999,
+        #     batch_size=48,  # Batch intermedio para entrenamiento largo
+        #     description="longer_training",
+        # ),
+        # ExperimentConfig(
+        #     learning_rate=0.05,
+        #     discount_factor=0.99,
+        #     epsilon=1.0,
+        #     epsilon_decay=0.997,
+        #     epsilon_min=0.05,
+        #     n_episodes=500,
+        #     max_steps=999,
+        #     batch_size=32,  # Batch estándar para epsilon alto
+        #     description="higher_min_epsilon",
+        # ),
         ExperimentConfig(
             learning_rate=0.05,
             discount_factor=0.99,
@@ -71,18 +99,9 @@ def main():
             epsilon_decay=0.997,
             epsilon_min=0.01,
             n_episodes=1000,
-            max_steps=999,
-            description="longer_training", # out - las metricas estan estables pero no es la mejor
-        ),
-        ExperimentConfig(
-            learning_rate=0.05,
-            discount_factor=0.99,
-            epsilon=1.0,
-            epsilon_decay=0.997,
-            epsilon_min=0.05,
-            n_episodes=500,
-            max_steps=999,
-            description="higher_min_epsilon", # out - las metricas llegaron a un minimo y luego subieron
+            max_steps=500,
+            batch_size=16,  # Batch pequeño para actualizaciones frecuentes
+            description="more_episodes_fewer_steps | stochastic",
         ),
         ExperimentConfig(
             learning_rate=0.05,
@@ -91,18 +110,9 @@ def main():
             epsilon_decay=0.997,
             epsilon_min=0.01,
             n_episodes=800,
-            max_steps=500,
-            description="more_episodes_fewer_steps", # keep - mas episodios | las metricas tienden a mejorar con mas episodios | experiment_results_more_episodes_fewer_steps_20241128_210130.png
-        ),
-        ExperimentConfig(
-            learning_rate=0.05,
-            discount_factor=0.99,
-            epsilon=1.0,
-            epsilon_decay=0.997,
-            epsilon_min=0.01,
-            n_episodes=500,
             max_steps=999,
-            description="adaptive_learning_rate", # keep - con mas episodios pareceria mejorarm, tiene un comportamiento de amortiguamiento o oscilacion amortiguada
+            batch_size=48,  # Batch intermedio para aprendizaje adaptativo
+            description="adaptive_learning_rate | stochastic",
         ),
     ]
 
