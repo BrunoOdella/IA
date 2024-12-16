@@ -1,10 +1,8 @@
 from agent import Agent
-from board import Board
-from heuristics import combined_heuristic
 import math
 
 class MinimaxAgent(Agent):
-    def __init__(self, player, depth, heuristic=combined_heuristic):
+    def __init__(self, player, depth, heuristic):
         super().__init__(player)
         self.depth = depth
         self.heuristic = heuristic
@@ -51,7 +49,7 @@ class MinimaxAgent(Agent):
         return self.heuristic(board)
 
 class ExpectimaxAgent(Agent):
-    def __init__(self, player, depth, heuristic=combined_heuristic):
+    def __init__(self, player, depth, heuristic):
         super().__init__(player)
         self.depth = depth
         self.heuristic = heuristic
