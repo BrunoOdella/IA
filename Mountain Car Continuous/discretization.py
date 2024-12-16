@@ -102,15 +102,6 @@ class MountainCarDiscretizer:
         return np.array(sorted(critical_points))
 
     def discretize_state(self, state: np.ndarray) -> Tuple[int, int]:
-        """
-        Convert continuous state to discrete state indices.
-
-        Args:
-            state: Continuous state vector [position, velocity]
-
-        Returns:
-            Tuple of discrete indices (position_idx, velocity_idx)
-        """
         position, velocity = state
 
         # Discretize position
@@ -122,27 +113,9 @@ class MountainCarDiscretizer:
         return position_idx, velocity_idx
 
     def discretize_action(self, action: Union[float, np.ndarray]) -> int:
-        """
-        Convert continuous action to discrete action index.
-
-        Args:
-            action: Continuous action value in [-1, 1]
-
-        Returns:
-            Index of closest discrete action
-        """
         return np.abs(self.actions - action).argmin()
 
     def get_continuous_action(self, action_idx: int) -> float:
-        """
-        Convert discrete action index to continuous action value.
-
-        Args:
-            action_idx: Index in the discrete action space
-
-        Returns:
-            Corresponding continuous action value
-        """
         return self.actions[action_idx]
 
     @property
