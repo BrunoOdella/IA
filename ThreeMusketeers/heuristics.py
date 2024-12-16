@@ -42,14 +42,11 @@ def musketeer_on_trap(board: Board):
 
 
 
-def combined_heuristic(board: Board):
-    """Combinación ponderada de múltiples heurísticas."""
-    return (
-        2 * proximity_to_center(board) +
-        3 * musketeer_mobility(board) -
-        enemy_mobility(board) +
-        musketeers_alignment(board)
-    )
+def enemy_count(board: Board):
+    """Devuelve la diferencia entre el número de enemigos y mosqueteros (cuantos menos enemigos, mejor)."""
+    enemy_count = - len(board.find_enemy_positions())
+    return  enemy_count
+
 
 
 def penalty_heuristic(board: Board):
@@ -60,12 +57,12 @@ def penalty_heuristic(board: Board):
 def penalty_heuristic_refined(board: Board):
     """
     Penaliza fuertemente estados terminales perdidos y estados previos que lleven a una derrota:
-    - Penaliza si los tres mosqueteros están alineados.
-    - Penaliza si un mosquetero está sobre una trampa.
+    Penaliza si los tres mosqueteros están alineados.
+    Penaliza si un mosquetero está sobre una trampa.
     """
     is_done, winner = board.is_end(1) 
     if is_done:
         return -1000 if winner != 1 else 1000 
 
-    # Penaliza estados críticos previos
+
     return musketeers_alignment(board) + musketeer_on_trap(board)
